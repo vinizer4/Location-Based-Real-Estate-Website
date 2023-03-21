@@ -1,0 +1,26 @@
+.leftNav {
+    margin-right: auto;
+}
+
+.rightNav {
+    margin-left: auto;
+    margin-right: 10rem
+}
+
+.cityImg {
+    width: 100%;
+    height: 92vh;
+}
+
+.overlayText {
+    position: absolute;
+    z-index: 100;
+    top: 100px;
+    left: 20px;
+    text-align: center;
+}
+
+.homeText {
+    color: #fff;
+    font-weight: bolder;
+}
