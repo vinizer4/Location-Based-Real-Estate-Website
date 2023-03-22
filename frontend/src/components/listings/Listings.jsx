@@ -25,7 +25,7 @@ import officeIconPng    from "../../assets/Mapicons/office.png"
 import img1             from "../../assets/img1.jpg"
 import myListings       from "../../assets/Data/Dummydata";
 
-import polygonOne from "../shape/polygonOne"
+import polygonOne from "../shape/Shape"
 
 import "./listings.styles.css"
 
