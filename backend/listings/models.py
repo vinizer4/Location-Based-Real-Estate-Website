@@ -1,5 +1,6 @@
-from django.db import models
+from django.contrib.gis.db import models
 from django.utils import timezone
+from django.contrib.gis.geos import Point
 
 
 class Listing(models.Model):
@@ -64,3 +65,4 @@ class Listing(models.Model):
 	cctv = models.BooleanField(default=False)
 	parking = models.BooleanField(default=False)
 	date_posted = models.DateTimeField(default=timezone.now)
+	location = models.PointField(blank=True, null=True, srid=4326)
