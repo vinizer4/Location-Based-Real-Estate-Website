@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
 	MapContainer,
@@ -15,7 +15,7 @@ import {
 	Card,
 	CardHeader,
 	CardContent,
-	CardMedia
+	CardMedia, CircularProgress
 }               from '@mui/material'
 import { Icon } from "leaflet"
 
@@ -28,8 +28,10 @@ import myListings       from "../../assets/Data/Dummydata";
 import polygonOne from "../shape/Shape"
 
 import "./listings.styles.css"
+import axios, {Axios}     from "axios";
 
 function Listings() {
+	
 	const [ latitute, setLatitude ] = useState(51.541078280085614)
 	const [ longitute, setLongitude ] = useState(-0.15871891189601836)
 	
@@ -59,15 +61,57 @@ function Listings() {
 	}
 	
 	const polyOne = [
-		[51.505, -0.09],
-		[51.51, -0.1],
-		[51.51, -0.12],
+		[ 51.505, -0.09 ],
+		[ 51.51, -0.1 ],
+		[ 51.51, -0.12 ],
 	]
+	
+	const [ allListings, setAllListings ] = useState([])
+	const [ dataIsLoading, setDataIsLoading ] = useState(true)
+	
+	useEffect(() => {
+		const source = axios.CancelToken.source()
+		async function GetAllListings() {
+			try {
+				const response = await axios.get(
+					'http://localhost:8000/api/listings/', {cancelToken: source.token})
+				setAllListings(response.data)
+				setDataIsLoading(false)
+			}
+			catch ( error ) {
+				console.log(error.response)
+			}
+		}
+		
+		GetAllListings()
+		
+		return () => {
+			source.cancel()
+		}
+	}, [])
+	
+	console.log(allListings[0])
+	
+	if ( dataIsLoading === false ) {
+		console.log(allListings[ 0 ].location)
+	}
+	
+	if ( dataIsLoading === true ) {
+		return (
+			<Grid
+				container justifyContent={ 'center' }
+				alignItems={ 'center' }
+				style={ { height: '100vh' } }
+			>
+				<CircularProgress/>
+			</Grid>
+		)
+	}
 	
 	return (
 		<Grid container>
 			<Grid item xs={ 4 }>
-				{ myListings.map((listing) => {
+				{ allListings.map((listing) => {
 					return (
 						<Card
 							key={ listing.id }
@@ -94,12 +138,12 @@ function Listings() {
 									) }...
 								</Typography>
 							</CardContent>
-							{listing.property_status === "Sale" ? (
+							{ listing.property_status === "Sale" ? (
 								<Typography
 									variant="body2"
 									className={ "priceOverlay" }
 								>
-									{listing.listing_type}:
+									{ listing.listing_type }:
 									${ " " }{ listing.price.toString()
 									                 .replace(
 										                 /\B(?=(\d{3})+(?!\d))/g,
@@ -107,18 +151,18 @@ function Listings() {
 									                 ) }
 								</Typography>
 							) : (
-								<Typography
-									variant="body2"
-									className={ "priceOverlay" }
-								>
-									{listing.listing_type}:
-									${ " " }{ listing.price.toString()
-									                 .replace(
-										                 /\B(?=(\d{3})+(?!\d))/g,
-										                 ","
-									                 ) }{" "} / {listing.rental_frequency}
-								</Typography>
-							)}
+								  <Typography
+									  variant="body2"
+									  className={ "priceOverlay" }
+								  >
+									  { listing.listing_type }:
+									  ${ " " }{ listing.price.toString()
+									                   .replace(
+										                   /\B(?=(\d{3})+(?!\d))/g,
+										                   ","
+									                   ) }{ " " } / { listing.rental_frequency }
+								  </Typography>
+							  ) }
 							
 							
 							{/*<CardActions disableSpacing>*/ }
@@ -131,7 +175,7 @@ function Listings() {
 							{/*</CardActions>*/ }
 						</Card>
 					)
-				})}
+				}) }
 			</Grid>
 			<Grid item xs={ 8 } style={ { marginTop: "0.5rem" } }>
 				<AppBar position={ 'sticky' }>
@@ -147,9 +191,17 @@ function Listings() {
 								// url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 								url={ "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" }
 							/>
-							<Polyline positions={polyOne} weight={10} color={"green"}/>
-							<Polygon positions={polygonOne} color={"yellow"} fillColor={"blue"} fillOpacity={0.9} opacity={0}/>
-							{ myListings.map((listing) => {
+							<Polyline
+								positions={ polyOne } weight={ 10 }
+								color={ "green" }
+							/>
+							<Polygon
+								positions={ polygonOne }
+								color={ "yellow" }
+								fillColor={ "blue" }
+								fillOpacity={ 0.3 } opacity={ 0 }
+							/>
+							{ allListings.map((listing) => {
 								function IconDisplay() {
 									if ( listing.listing_type
 									     === 'House' ) {
@@ -235,5 +287,5 @@ function Listings() {
 		</Grid>
 	);
 }
-	
-	export default Listings;
+
+export default Listings;

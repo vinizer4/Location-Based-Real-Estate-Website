@@ -7,6 +7,7 @@ import React             from "react";
 import Listings          from "./components/listings/Listings";
 import Login             from "./components/login/Login";
 import Header            from "./components/header/Header";
+import Testing           from "./components/testing/Testing";
 
 function App() {
 	return (
@@ -17,6 +18,7 @@ function App() {
 				<Route path="/" element={ <Home/> }/>
 				<Route path="/login" element={ <Login/> }/>
 				<Route path="/listings" element={ <Listings/> }/>
+				<Route path="/testing" element={ <Testing/> }/>
 			</Routes>
 		</div>
 	);
