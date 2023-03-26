@@ -111,7 +111,7 @@ function Listings() {
 	return (
 		<Grid container>
 			<Grid item xs={ 4 }>
-				{ allListings.map((listing) => {
+				{ myListings.map((listing) => {
 					return (
 						<Card
 							key={ listing.id }
@@ -201,7 +201,7 @@ function Listings() {
 								fillColor={ "blue" }
 								fillOpacity={ 0.3 } opacity={ 0 }
 							/>
-							{ allListings.map((listing) => {
+							{ myListings.map((listing) => {
 								function IconDisplay() {
 									if ( listing.listing_type
 									     === 'House' ) {
